@@ -86,8 +86,8 @@
                                         <object class="wxToggleButton" name="buttonLockSize" base="EditToggleButton">
                                             <style>wxBU_EXACTFIT</style>
                                             <value>1</value>
-                                            <bitmap>E:\devel\explo\lock_open.png</bitmap>
-                                            <pressed_bitmap>E:\devel\explo\lock.png</pressed_bitmap>
+                                            <bitmap>lock_open.png</bitmap>
+                                            <pressed_bitmap>lock.png</pressed_bitmap>
                                         </object>
                                     </object>
                                 </object>
@@ -229,7 +229,7 @@
                         <flag>wxALIGN_CENTER</flag>
                         <object class="wxButton" name="buttonGenerate" base="EditButton">
                             <label>¡Generar!</label>
-                            <bitmap>E:\devel\explo\lightning.png</bitmap>
+                            <bitmap>lightning.png</bitmap>
                         </object>
                     </object>
                 </object>
@@ -260,8 +260,8 @@
                                 <border>0</border>
                                 <object class="wxToggleButton" name="buttonPlayPause" base="EditToggleButton">
                                     <style>wxBU_EXACTFIT</style>
-                                    <bitmap>E:\devel\explo\control_play_blue.png</bitmap>
-                                    <pressed_bitmap>E:\devel\explo\control_pause_blue.png</pressed_bitmap>
+                                    <bitmap>control_play_blue.png</bitmap>
+                                    <pressed_bitmap>control_pause_blue.png</pressed_bitmap>
                                 </object>
                             </object>
                             <object class="sizeritem">
@@ -322,7 +322,7 @@
                                 <flag>wxALL</flag>
                                 <object class="wxButton" name="buttonSave" base="EditButton">
                                     <label>Guardar</label>
-                                    <bitmap>E:\devel\explo\diskette.png</bitmap>
+                                    <bitmap>diskette.png</bitmap>
                                 </object>
                             </object>
                         </object>
