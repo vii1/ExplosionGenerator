@@ -3,19 +3,20 @@ from ui import Ventana
 
 
 class MyApp(wx.App):
-    # def __init__(self, redirect=False, filename=None, useBestVisual=False, clearSigInt=True):
-    #     wx.App.__init__(self, redirect, filename, useBestVisual, clearSigInt)
-    #     self.gradientPanels = None
-    #     self.gradientChecks = None
 
     def OnInit(self):
+        # Data for the color dialog
         self.colourData = wx.ColourData()
         self.colourData.SetChooseAlpha(True)
 
         self.ventana = Ventana(None, wx.ID_ANY, "")
         self.SetTopWindow(self.ventana)
 
+        # Image size widgets
+        self.ventana.spinWidth.Bind(wx.EVT_SPINCTRL, self.spinWidth_OnChange)
+        self.ventana.spinHeight.Bind(wx.EVT_SPINCTRL, self.spinHeight_OnChange)
         self.ventana.buttonLockSize.SetValue(True)
+
         self.ventana.gridGradient.Clear()
         gradientPanels = [wx.Panel(self.ventana, size=(24, 24), style=wx.TAB_TRAVERSAL|wx.BORDER_SUNKEN) for i in range(9)]
         self.ventana.gridGradient.AddMany([(panel, wx.ALIGN_CENTER_HORIZONTAL) for panel in gradientPanels])
@@ -45,6 +46,14 @@ class MyApp(wx.App):
         self.UpdateGradient()
         self.ventana.Show()
         return True
+
+    def spinWidth_OnChange(self, event : wx.SpinEvent):
+        if self.ventana.buttonLockSize.GetValue():
+            self.ventana.spinHeight.SetValue(self.ventana.spinWidth.GetValue())
+
+    def spinHeight_OnChange(self, event : wx.SpinEvent):
+        if self.ventana.buttonLockSize.GetValue():
+            self.ventana.spinWidth.SetValue(self.ventana.spinHeight.GetValue())
 
     def panelCheck_OnCheck(self, event : wx.CommandEvent):
         self.UpdateGradient()
