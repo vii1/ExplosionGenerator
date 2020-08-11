@@ -5,11 +5,12 @@ from colorpicker import ColorPicker, ColorPickerEvent, EVT_COLOR_PICKER
 GradientWidgetEvent, EVT_GRADIENT_WIDGET = wx.lib.newevent.NewCommandEvent()
 
 class GradientWidget(wx.Panel):
-    def __init__(self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.DefaultSize, style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+    def __init__(self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.DefaultSize, style = wx.TAB_TRAVERSAL,
+                 name = wx.EmptyString, num_stops = 9 ):
         super(wx.Panel, self).__init__(parent, id = id, pos = pos, size = size, style = style, name = name)
         self.parent = parent
 
-        self._numstops = 9
+        self._numstops = num_stops
         self._colourdata = wx.ColourData()
         self._colourdata.SetChooseAlpha(True)
         self._CreateUI()
@@ -26,8 +27,8 @@ class GradientWidget(wx.Panel):
         sizer.Add(self._preview, 0, wx.EXPAND)
 
         self._pickers = [ColorPicker(self) for i in range(self._numstops)]
-        self._pickers[0].colour = wx.Colour(255,255,255)
-        self._pickers[-1].colour = wx.Colour(0,0,0)
+        self._pickers[0].Colour = wx.Colour(255,255,255)
+        self._pickers[-1].Colour = wx.Colour(0,0,0)
         self._checks = [wx.CheckBox(self) for i in range(self._numstops)]
         for i in (0, -1):
             self._checks[i].SetValue(True)
@@ -37,12 +38,12 @@ class GradientWidget(wx.Panel):
         for i in range(1, self._numstops-1):
             self._checks[i].Bind(wx.EVT_CHECKBOX, self.OnCheckChanged)
 
-        grid = wx.FlexGridSizer(2, self._numstops, 0, 1)
+        self._grid = wx.FlexGridSizer(2, self._numstops, 0, 1)
         for i in range(self._numstops):
-            grid.AddGrowableCol(i, 1)
-        grid.AddMany([(p, 1, wx.EXPAND) for p in self._pickers])
-        grid.AddMany([(c, 0, wx.ALIGN_CENTER) for c in self._checks])
-        sizer.Add(grid, 1, wx.EXPAND)
+            self._grid.AddGrowableCol(i, 1)
+        self._grid.AddMany([(p, 1, wx.EXPAND) for p in self._pickers])
+        self._grid.AddMany([(c, 0, wx.ALIGN_CENTER) for c in self._checks])
+        sizer.Add(self._grid, 1, wx.EXPAND)
         self.SetSizer(sizer)
 
     def _PaintPreview(self, event: wx.PaintEvent):
@@ -57,6 +58,26 @@ class GradientWidget(wx.Panel):
         brush = gc.CreateLinearGradientBrush(0, 0, rect.GetWidth() - 1, 0, stops)
         gc.SetBrush(brush)
         gc.DrawRectangle(0, 0, rect.GetWidth(), rect.GetHeight())
+
+    def GetNumStops(self):
+        return self._numstops
+
+    def SetNumStops(self, n):
+        n = int(n)
+        if n < 2 or n > 32:
+            raise ValueError("num_stops must be between 2 and 32")
+        if n == self._numstops: return
+        # self._grid.Clear(True)
+        self.GetSizer().Clear(True)
+        self.SetSizer(None)
+        self._pickers = None
+        self._checks = None
+        self._numstops = n
+        self._CreateUI()
+        self.UpdateGradient()
+        self.Layout()
+
+    NumStops = property(GetNumStops, SetNumStops, doc="Number of editable stops in the gradient")
 
     def OnColorPicked(self, event : ColorPickerEvent):
         obj = event.GetEventObject()
@@ -91,11 +112,11 @@ class GradientWidget(wx.Panel):
                         round(colors[desde].alpha + da*(i+1)))
             desde = hasta
         for i in range(self._numstops):
-            self._pickers[i].colour = colors[i]
+            self._pickers[i].Colour = colors[i]
         self._preview.Refresh()
 
     def GetGradientAsColors(self):
-        return [p.colour for p in self._pickers]
+        return [p.Colour for p in self._pickers]
 
     def GetGradientAsStops(self):
         colors = self.GetGradientAsColors()

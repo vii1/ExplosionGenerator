@@ -23,14 +23,14 @@ class ColorPicker(wx.Button):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         #self.Create(parent)
 
-    @property
-    def colour(self):
+    def GetColour(self):
         return self._colour
 
-    @colour.setter
-    def colour(self, colour : wx.Colour):
+    def SetColour(self, colour : wx.Colour):
         self._colour = colour
         self.Refresh()
+
+    Colour = property(GetColour, SetColour, doc="Selected colour")
 
     def OnClick(self, event : wx.CommandEvent):
         if self.parent and '_colourdata' in self.parent.__dict__:
@@ -41,7 +41,7 @@ class ColorPicker(wx.Button):
         dialog = CCD.CubeColourDialog(self, colourdata)
         if dialog.ShowModal() == wx.ID_OK:
             colourdata = dialog.GetColourData()
-            self.colour = wx.Colour(colourdata.GetColour())
+            self.Colour = wx.Colour(colourdata.GetColour())
             if self.parent and '_colourdata' in self.parent.__dict__:
                 self.parent._colourdata = colourdata
             e = ColorPickerEvent(self.GetId())
