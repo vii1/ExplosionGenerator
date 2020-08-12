@@ -20,18 +20,22 @@ class ImageDisplay(wx.Window):
 
     def OnPaint(self, event: wx.PaintEvent):
         dc = wx.PaintDC(self)
-        dc.SetBrush(wx.GREY_BRUSH)
         if self._image == None:
+            dc.SetBrush(wx.GREY_BRUSH)
             it = wx.RegionIterator(self.GetUpdateRegion())
             while it.HaveRects():
                 rect = it.GetRect()
                 dc.DrawRectangle(rect)
                 it.Next()
             return
-        gc = wx.GraphicsContext.Create(dc)
-        if not gc: return
         clientRect = self.GetClientRect()
-        dc.DrawRectangle(clientRect)
+        bmp = wx.Bitmap(clientRect.Size)
+        dc2 = wx.MemoryDC()
+        dc2.SelectObject(bmp)
+        gc = wx.GraphicsContext.Create(dc2)
+        if not gc: return
+        gc.SetBrush(wx.GREY_BRUSH)
+        gc.DrawRectangle(clientRect.x, clientRect.y, clientRect.width, clientRect.height)
         rect = wx.Rect(self._image.Size)
         ratio = rect.width / rect.height
         if rect.width > rect.height:
@@ -49,6 +53,7 @@ class ImageDisplay(wx.Window):
                 rect.width = clientRect.width
                 rect.height = clientRect.width / ratio
         rect = rect.CenterIn(clientRect)
-        dc.SetBrush(GetPatternBrush())
-        dc.DrawRectangle(rect)
+        gc.SetBrush(GetPatternBrush())
+        gc.DrawRectangle(rect.x, rect.y, rect.width, rect.height)
         gc.DrawBitmap(self._image, rect.x, rect.y, rect.width, rect.height)
+        dc.Blit(0, 0, clientRect.width, clientRect.height, dc2, 0, 0)
