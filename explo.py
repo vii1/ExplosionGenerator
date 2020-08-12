@@ -64,6 +64,8 @@ class MyApp(wx.App):
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.timer_Tick)
 
+        # Save button
+        self.ventana.buttonSave.Bind(wx.EVT_BUTTON, self.buttonSave_OnClick)
         self.ventana.Layout()
         self.ventana.Show()
         return True
@@ -87,7 +89,7 @@ class MyApp(wx.App):
         seed = None
         exp = ExplosionGenerator(size, gradient, type, frames, points, seed)
         dialog = wx.ProgressDialog("Generando...", f"Preparando...", frames, self.ventana,
-                                   wx.PD_APP_MODAL | wx.PD_AUTO_HIDE | wx.PD_CAN_ABORT | wx.PD_ESTIMATED_TIME)
+                                   wx.PD_APP_MODAL | wx.PD_AUTO_HIDE | wx.PD_CAN_ABORT | wx.PD_REMAINING_TIME | wx.PD_ESTIMATED_TIME)
         try:
             bmps = exp.CreateFrames(dialog)
         finally:
@@ -130,6 +132,27 @@ class MyApp(wx.App):
         if self.ventana.buttonPlayPause.Value:
             self.timer.Stop()
             self.timer.Start(round(1000 / self.ventana.spinFps.Value))
+
+    def buttonSave_OnClick(self, event: wx.CommandEvent):
+        import os.path
+        tipos = "PNG (*.png)|.png"
+        with wx.FileDialog(parent=self.ventana, message="Guardar animación", wildcard=tipos,
+                           style=wx.FD_SAVE) as dialog:
+            if dialog.ShowModal() == wx.ID_CANCEL:
+                return
+            path = dialog.GetPath()
+        try:
+            dir, name = os.path.split(path)
+            name, ext = os.path.splitext(name)
+            if ext == "": ext = ".png"
+            width = len(str(len(self.bmps) - 1))
+            fmt = os.path.join(dir, name) + "%0" + str(width) + "d" + ext
+            for i, bmp in enumerate(self.bmps):
+                bmp.SaveFile(fmt % i, wx.BITMAP_TYPE_PNG)
+        except Exception as e:
+            wx.MessageBox("Ocurrió un error al guardar: " + str(e), caption="Error al guardar",
+                          style=wx.OK | wx.CENTRE | wx.ICON_ERROR, parent=self.ventana)
+
 
 if __name__ == "__main__":
     app = MyApp(0)
