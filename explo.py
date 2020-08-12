@@ -135,7 +135,7 @@ class MyApp(wx.App):
 
     def buttonSave_OnClick(self, event: wx.CommandEvent):
         import os.path
-        tipos = "PNG (*.png)|.png"
+        tipos = "PNG (*.png)|*.png"
         with wx.FileDialog(parent=self.ventana, message="Guardar animación", wildcard=tipos,
                            style=wx.FD_SAVE) as dialog:
             if dialog.ShowModal() == wx.ID_CANCEL:
