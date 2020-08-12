@@ -39,7 +39,7 @@ class ColorPicker(wx.Button):
         else:
             colourdata = wx.ColourData()
         colourdata.Colour = self._colour
-        dialog = CCD.CubeColourDialog(self, colourdata)
+        dialog = CCD.CubeColourDialog(self.TopLevelParent, colourdata)
         if dialog.ShowModal() == wx.ID_OK:
             colourdata = dialog.GetColourData()
             self.Colour = wx.Colour(colourdata.GetColour())
