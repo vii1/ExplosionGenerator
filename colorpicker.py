@@ -1,5 +1,6 @@
 import wx
 import wx.lib.newevent
+from pattern import GetPatternBrush
 
 try:
     from agw import cubecolourdialog as CCD
@@ -55,9 +56,7 @@ class ColorPicker(wx.Button):
         while upd.HaveRects():
             rect = upd.GetRect()
             if self._colour.alpha < wx.ALPHA_OPAQUE:
-                gc.SetBrush(wx.WHITE_BRUSH)
-                gc.DrawRectangle(rect.X, rect.Y, rect.Width, rect.Height)
-                gc.SetBrush(wx.TheBrushList.FindOrCreateBrush(wx.Colour(128,128,128), wx.BRUSHSTYLE_BDIAGONAL_HATCH))
+                gc.SetBrush(GetPatternBrush())
                 gc.DrawRectangle(rect.X, rect.Y, rect.Width, rect.Height)
             gc.SetBrush(wx.TheBrushList.FindOrCreateBrush(self._colour))
             gc.DrawRectangle(rect.X, rect.Y, rect.Width, rect.Height)

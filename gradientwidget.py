@@ -1,6 +1,7 @@
 import wx
 import wx.lib.newevent
 from colorpicker import ColorPicker, ColorPickerEvent, EVT_COLOR_PICKER
+from pattern import GetPatternBrush
 
 GradientWidgetEvent, EVT_GRADIENT_WIDGET = wx.lib.newevent.NewCommandEvent()
 
@@ -55,6 +56,12 @@ class GradientWidget(wx.Panel):
         dc = wx.PaintDC(self._preview)
         gc = wx.GraphicsContext.Create(dc)
         if not gc: return
+        gc.SetBrush(GetPatternBrush())
+        it = wx.RegionIterator(self._preview.GetUpdateRegion())
+        while it.HaveRects():
+            rect = it.GetRect()
+            gc.DrawRectangle(rect.x, rect.y, rect.width, rect.height)
+            it.Next()
         rect = self._preview.GetClientRect()
         asStops = self.GetGradientAsStops()
         stops = wx.GraphicsGradientStops(asStops[0][0], asStops[-1][0])

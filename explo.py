@@ -1,8 +1,9 @@
 import wx
 from ui import Ventana
 from explosiongenerator import ExplosionGenerator
+from pattern import GetPatternBrush
 
-def _first(iterable, condition = lambda x: True):
+def _first(iterable, condition=lambda x: True):
     """
     Returns the first item in the `iterable` that
     satisfies the `condition`.
@@ -24,6 +25,7 @@ def _first(iterable, condition = lambda x: True):
 
     return next(x for x in iterable if condition(x))
 
+
 class MyApp(wx.App):
 
     def OnInit(self):
@@ -40,19 +42,34 @@ class MyApp(wx.App):
 
         # Generate! button
         self.ventana.buttonGenerate.Bind(wx.EVT_BUTTON, self.buttonGenerate_OnClick)
+
+        # Animation
+        self.bmps = None
+        self.controlesResultado = (
+            #self.ventana.panelPreview,
+            self.ventana.buttonPlayPause,
+            self.ventana.sliderPreview,
+            self.ventana.labelVelocidad,
+            self.ventana.spinFps,
+            self.ventana.labelFPS,
+            self.ventana.buttonSave
+        )
+        for w in self.controlesResultado:
+            w.Enable(False)
+
         self.ventana.Layout()
         self.ventana.Show()
         return True
 
-    def spinWidth_OnChange(self, event : wx.SpinEvent):
+    def spinWidth_OnChange(self, event: wx.SpinEvent):
         if self.ventana.buttonLockSize.GetValue():
             self.ventana.spinHeight.SetValue(self.ventana.spinWidth.GetValue())
 
-    def spinHeight_OnChange(self, event : wx.SpinEvent):
+    def spinHeight_OnChange(self, event: wx.SpinEvent):
         if self.ventana.buttonLockSize.GetValue():
             self.ventana.spinWidth.SetValue(self.ventana.spinHeight.GetValue())
 
-    def buttonGenerate_OnClick(self, event : wx.CommandEvent):
+    def buttonGenerate_OnClick(self, event: wx.CommandEvent):
         size = wx.Size(self.ventana.spinWidth.Value, self.ventana.spinHeight.Value)
         gradient = self.ventana.gradientWidget.GetGradientAsStops()
         _, type = _first(
@@ -62,13 +79,26 @@ class MyApp(wx.App):
         points = self.ventana.spinGranularity.Value
         seed = None
         exp = ExplosionGenerator(size, gradient, type, frames, points, seed)
-        dialog = wx.ProgressDialog("Generando...", f"Preparando...", frames, self.ventana, wx.PD_APP_MODAL | wx.PD_AUTO_HIDE | wx.PD_CAN_ABORT | wx.PD_ESTIMATED_TIME)
-        bmps = exp.CreateFrames(dialog)
-        dialog.Hide()
-        dialog.Destroy()
+        dialog = wx.ProgressDialog("Generando...", f"Preparando...", frames, self.ventana,
+                                   wx.PD_APP_MODAL | wx.PD_AUTO_HIDE | wx.PD_CAN_ABORT | wx.PD_ESTIMATED_TIME)
+        try:
+            bmps = exp.CreateFrames(dialog)
+        finally:
+            dialog.Hide()
+            dialog.Destroy()
         if bmps != None:
-            for i, bmp in enumerate(bmps):
-                bmp.SaveFile("r:\\explo%03d.png" % i, wx.BITMAP_TYPE_PNG)
+            self.SetAnimation(bmps)
+
+    def SetAnimation(self, bmps):
+        # for i, bmp in enumerate(bmps):
+        #    bmp.SaveFile("r:\\explo%03d.png" % i, wx.BITMAP_TYPE_PNG)
+        self.bmps = bmps
+        for w in self.controlesResultado:
+            w.Enable(True)
+        self.ventana.sliderPreview.Value = 0
+        self.ventana.sliderPreview.SetMax(len(bmps) - 1)
+        self.ventana.imageDisplay.SetImage(bmps[0])
+
 
 # end of class MyApp
 
