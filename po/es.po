@@ -1,0 +1,160 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ExplosionGenerator\n"
+"POT-Creation-Date: 2020-08-13 13:09+0200\n"
+"PO-Revision-Date: 2020-08-13 13:12+0200\n"
+"Last-Translator: \n"
+"Language-Team: Vii <vii@divero.net>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"X-Poedit-Basepath: ../explo\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: explo.py:105
+msgid "Generating..."
+msgstr "Generando..."
+
+#: explo.py:105
+msgid "Starting..."
+msgstr "Iniciando..."
+
+#: explo.py:157
+msgid "PNG (*.png)"
+msgstr "PNG (*.png)"
+
+#: explo.py:159
+msgid "Save animation"
+msgstr "Guardar animación"
+
+#: explo.py:173
+#, python-format
+msgid "An error occured while saving: %s"
+msgstr "Se ha producido un error al guardar: %s"
+
+#: explo.py:173
+msgid "Error while saving"
+msgstr "Error al guardar"
+
+#: explosiongenerator.py:70
+#, python-format
+msgid "Generating frame %d of %d"
+msgstr "Generando imagen %d de %d"
+
+#: ui.py:30
+msgid "Type A"
+msgstr "Tipo A"
+
+#: ui.py:31
+msgid "Type B"
+msgstr "Tipo B"
+
+#: ui.py:32
+msgid "Type C"
+msgstr "Tipo C"
+
+#: ui.py:35
+msgid "Generate!"
+msgstr "¡Generar!"
+
+#: ui.py:40
+msgid "Speed"
+msgstr "Velocidad"
+
+#: ui.py:42
+msgid "FPS"
+msgstr "FPS"
+
+#: ui.py:43
+msgid "Save"
+msgstr "Guardar"
+
+#: ui.py:51
+msgid "Explosion generator"
+msgstr "Generador de explosiones"
+
+#: ui.py:56
+msgid "Width of image in pixels"
+msgstr "Anchura de la imagen en pixels"
+
+#: ui.py:57
+msgid "Height of image in pixels"
+msgstr "Altura de la imagen en pixels"
+
+#: ui.py:58
+msgid "Force square aspect ratio"
+msgstr "Forzar proporción cuadrada"
+
+#: ui.py:62
+msgid "Color gradient used for explosion"
+msgstr "Gradiente de color para la explosión"
+
+#: ui.py:63
+msgid "Simple type with 4 components"
+msgstr "Tipo sencillo con 4 componentes"
+
+#: ui.py:65
+msgid "Complex type with 3 components"
+msgstr "Tipo complejo con 3 componentes"
+
+#: ui.py:66
+msgid "Complex type with 5 components"
+msgstr "Tipo complejo con 5 componentes"
+
+#: ui.py:68
+msgid "Number of frames to generate"
+msgstr "Número de imágenes a generar"
+
+#: ui.py:70
+msgid "Amount of granularity effect"
+msgstr "Intensidad del efecto de granulado"
+
+#: ui.py:72
+msgid "Play/pause preview"
+msgstr "Reproducir/pausar previsualización"
+
+#: ui.py:76
+msgid "Speed of animation in frames per second"
+msgstr "Velocidad de la animación en cuadros por segundo"
+
+#: ui.py:83
+msgid "Result"
+msgstr "Resultado"
+
+#: ui.py:86
+msgid "Parameters"
+msgstr "Parámetros"
+
+#: ui.py:90
+msgid "Size"
+msgstr "Tamaño"
+
+#: ui.py:93
+msgid "×"
+msgstr "×"
+
+#: ui.py:96
+msgid "pixels"
+msgstr "pixels"
+
+#: ui.py:101
+msgid "Gradient"
+msgstr "Gradiente"
+
+#: ui.py:104
+msgid "Type"
+msgstr "Tipo"
+
+#: ui.py:110
+msgid "Frames"
+msgstr "Imágenes"
+
+#: ui.py:113
+msgid "Granularity"
+msgstr "Granulado"
+
+#~ msgid "Forzar proporción cuadrada"
+#~ msgstr "Forzar proporción cuadrada"

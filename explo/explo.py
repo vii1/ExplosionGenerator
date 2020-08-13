@@ -5,9 +5,8 @@
 #
 
 import wx
-from explo.ui import Ventana
-from explo.explosiongenerator import ExplosionGenerator
-
+from .ui import Ventana
+from .explosiongenerator import ExplosionGenerator
 
 def _first(iterable, condition=lambda x: True):
     """
@@ -36,6 +35,9 @@ class MyApp(wx.App):
     "Main application class"
 
     def OnInit(self):
+        return True
+
+    def Start(self):
         "UI setup and event bindings"
 
         # Data for the color dialog
@@ -77,7 +79,6 @@ class MyApp(wx.App):
 
         self.ventana.Layout()
         self.ventana.Show()
-        return True
 
     def spinWidth_OnChange(self, event: wx.SpinEvent):
         # Change both spinners if buttonLockSize is pushed
@@ -93,7 +94,7 @@ class MyApp(wx.App):
         # Collect all configured properties
         size = wx.Size(self.ventana.spinWidth.Value, self.ventana.spinHeight.Value)
         gradient = self.ventana.gradientWidget.GetGradientAsStops()
-        _, type = _first(
+        _x, type = _first(
             {self.ventana.radioTypeA: 'A', self.ventana.radioTypeB: 'B', self.ventana.radioTypeC: 'C'}.items(),
             lambda x: x[0].Value)
         frames = self.ventana.spinNumFrames.Value
@@ -102,7 +103,7 @@ class MyApp(wx.App):
         seed = None
 
         # Begin the process
-        dialog = wx.ProgressDialog("Generando...", f"Preparando...", frames, self.ventana,
+        dialog = wx.ProgressDialog(_("Generating..."), _("Starting..."), frames, self.ventana,
                                    wx.PD_APP_MODAL | wx.PD_AUTO_HIDE | wx.PD_CAN_ABORT | wx.PD_REMAINING_TIME | wx.PD_ESTIMATED_TIME)
         exp = ExplosionGenerator(size, gradient, type, frames, points, seed)
         try:
@@ -146,14 +147,17 @@ class MyApp(wx.App):
             self.timer.Stop()
 
     def spinFps_OnChange(self, event: wx.SpinEvent):
+        "If the animation is playing, changes speed on the fly"
         if self.ventana.buttonPlayPause.Value:
             self.timer.Stop()
             self.timer.Start(round(1000 / self.ventana.spinFps.Value))
 
     def buttonSave_OnClick(self, event: wx.CommandEvent):
         import os.path
-        tipos = "PNG (*.png)|*.png"
-        with wx.FileDialog(parent=self.ventana, message="Guardar animación", wildcard=tipos,
+        tipos = '|'.join((
+            _("PNG (*.png)"), "*.png"
+        ))
+        with wx.FileDialog(parent=self.ventana, message=_("Save animation"), wildcard=tipos,
                            style=wx.FD_SAVE) as dialog:
             if dialog.ShowModal() == wx.ID_CANCEL:
                 return
@@ -167,5 +171,5 @@ class MyApp(wx.App):
             for i, bmp in enumerate(self.bmps):
                 bmp.SaveFile(fmt % i, wx.BITMAP_TYPE_PNG)
         except Exception as e:
-            wx.MessageBox("Ocurrió un error al guardar: " + str(e), caption="Error al guardar",
+            wx.MessageBox(_("An error occured while saving: %s") % str(e), caption=_("Error while saving"),
                           style=wx.OK | wx.CENTRE | wx.ICON_ERROR, parent=self.ventana)

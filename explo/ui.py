@@ -6,12 +6,12 @@
 import wx
 
 # begin wxGlade: dependencies
+import gettext
 # end wxGlade
-from gettext import gettext as _
 
 # begin wxGlade: extracode
-from explo.imagedisplay import ImageDisplay
-from explo.gradientwidget import GradientWidget
+from .imagedisplay import ImageDisplay
+from .gradientwidget import GradientWidget
 # end wxGlade
 
 
@@ -52,17 +52,27 @@ class Ventana(wx.Frame):
         _icon.CopyFromBitmap(wx.Bitmap("img/icon.png", wx.BITMAP_TYPE_ANY))
         self.SetIcon(_icon)
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
-        self.buttonLockSize.SetToolTip(_(u"Forzar proporción cuadrada"))
+        self.spinWidth.SetToolTip(_("Width of image in pixels"))
+        self.spinHeight.SetToolTip(_("Height of image in pixels"))
+        self.buttonLockSize.SetToolTip(_("Force square aspect ratio"))
         self.buttonLockSize.SetValue(True)
         self.buttonLockSize.SetBitmap(wx.Bitmap("img/lock_open.png", wx.BITMAP_TYPE_ANY))
         self.buttonLockSize.SetBitmapPressed(wx.Bitmap("img/lock.png", wx.BITMAP_TYPE_ANY))
+        self.gradientWidget.SetToolTip(_("Color gradient used for explosion"))
+        self.radioTypeA.SetToolTip(_("Simple type with 4 components"))
         self.radioTypeA.SetValue(1)
+        self.radioTypeB.SetToolTip(_("Complex type with 3 components"))
+        self.radioTypeC.SetToolTip(_("Complex type with 5 components"))
         self.spinNumFrames.SetMinSize((60, 23))
+        self.spinNumFrames.SetToolTip(_("Number of frames to generate"))
         self.spinGranularity.SetMinSize((60, 23))
+        self.spinGranularity.SetToolTip(_("Amount of granularity effect"))
         self.buttonGenerate.SetBitmap(wx.Bitmap("img/lightning.png", wx.BITMAP_TYPE_ANY))
+        self.buttonPlayPause.SetToolTip(_("Play/pause preview"))
         self.buttonPlayPause.SetBitmap(wx.Bitmap("img/control_play_blue.png", wx.BITMAP_TYPE_ANY))
         self.buttonPlayPause.SetBitmapPressed(wx.Bitmap("img/control_pause_blue.png", wx.BITMAP_TYPE_ANY))
         self.spinFps.SetMinSize((80, 23))
+        self.spinFps.SetToolTip(_("Speed of animation in frames per second"))
         self.buttonSave.SetBitmap(wx.Bitmap("img/diskette.png", wx.BITMAP_TYPE_ANY))
         # end wxGlade
 

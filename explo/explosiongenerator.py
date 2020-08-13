@@ -3,7 +3,6 @@ import wx
 import numpy as np
 from numpy.random import default_rng
 
-
 def _lerp(x, y, alpha):
     return x + (y - x) * alpha
 
@@ -67,7 +66,7 @@ class ExplosionGenerator:
         paso_frame = min(self.size.x, self.size.y) / (self.frames * 2)
         bmps = []
         for n in range(self.frames):
-            dialog.Update(n, f"Generando imagen {n + 1} de {self.frames}")
+            dialog.Update(n, _("Generating frame %d of %d") % (n + 1, self.frames))
             if dialog.WasCancelled():
                 return None
             bmp = self._CreateFrame(n, rng, buf, p, paso_frame, dialog)
