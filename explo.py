@@ -1,7 +1,12 @@
+#
+# Explosion Generator
+#
+# Main program module
+#
+
 import wx
 from ui import Ventana
 from explosiongenerator import ExplosionGenerator
-from pattern import GetPatternBrush
 
 
 def _first(iterable, condition=lambda x: True):
@@ -28,12 +33,16 @@ def _first(iterable, condition=lambda x: True):
 
 
 class MyApp(wx.App):
+    "Main application class"
 
     def OnInit(self):
+        "UI setup and event bindings"
+
         # Data for the color dialog
         self.colourData = wx.ColourData()
         self.colourData.SetChooseAlpha(True)
 
+        # Main window
         self.ventana = Ventana(None, wx.ID_ANY, "")
         self.SetTopWindow(self.ventana)
 
@@ -44,13 +53,12 @@ class MyApp(wx.App):
         # Generate! button
         self.ventana.buttonGenerate.Bind(wx.EVT_BUTTON, self.buttonGenerate_OnClick)
 
-        # Animation
+        # Animation controls and display
         self.bmps = None
         self.ventana.sliderPreview.Bind(wx.EVT_SLIDER, self.sliderPreview_OnChange)
         self.ventana.buttonPlayPause.Bind(wx.EVT_TOGGLEBUTTON, self.buttonPlayPause_OnToggle)
         self.ventana.spinFps.Bind(wx.EVT_SPINCTRL, self.spinFps_OnChange)
         self.controlesResultado = (
-            # self.ventana.panelPreview,
             self.ventana.buttonPlayPause,
             self.ventana.sliderPreview,
             self.ventana.labelVelocidad,
@@ -66,19 +74,23 @@ class MyApp(wx.App):
 
         # Save button
         self.ventana.buttonSave.Bind(wx.EVT_BUTTON, self.buttonSave_OnClick)
+
         self.ventana.Layout()
         self.ventana.Show()
         return True
 
     def spinWidth_OnChange(self, event: wx.SpinEvent):
+        # Change both spinners if buttonLockSize is pushed
         if self.ventana.buttonLockSize.GetValue():
             self.ventana.spinHeight.SetValue(self.ventana.spinWidth.GetValue())
 
     def spinHeight_OnChange(self, event: wx.SpinEvent):
+        # Change both spinners if buttonLockSize is pushed
         if self.ventana.buttonLockSize.GetValue():
             self.ventana.spinWidth.SetValue(self.ventana.spinHeight.GetValue())
 
     def buttonGenerate_OnClick(self, event: wx.CommandEvent):
+        # Collect all configured properties
         size = wx.Size(self.ventana.spinWidth.Value, self.ventana.spinHeight.Value)
         gradient = self.ventana.gradientWidget.GetGradientAsStops()
         _, type = _first(
@@ -86,10 +98,13 @@ class MyApp(wx.App):
             lambda x: x[0].Value)
         frames = self.ventana.spinNumFrames.Value
         points = self.ventana.spinGranularity.Value
+        # TODO: Allow the user to specify a seed
         seed = None
-        exp = ExplosionGenerator(size, gradient, type, frames, points, seed)
+
+        # Begin the process
         dialog = wx.ProgressDialog("Generando...", f"Preparando...", frames, self.ventana,
                                    wx.PD_APP_MODAL | wx.PD_AUTO_HIDE | wx.PD_CAN_ABORT | wx.PD_REMAINING_TIME | wx.PD_ESTIMATED_TIME)
+        exp = ExplosionGenerator(size, gradient, type, frames, points, seed)
         try:
             bmps = exp.CreateFrames(dialog)
         finally:
@@ -99,8 +114,7 @@ class MyApp(wx.App):
             self.SetAnimation(bmps)
 
     def SetAnimation(self, bmps):
-        # for i, bmp in enumerate(bmps):
-        #    bmp.SaveFile("r:\\explo%03d.png" % i, wx.BITMAP_TYPE_PNG)
+        "Does everything needed when a new animation is created"
         self.timer.Stop()
         self.bmps = bmps
         for w in self.controlesResultado:
@@ -111,9 +125,11 @@ class MyApp(wx.App):
         self.ventana.imageDisplay.SetImage(bmps[0])
 
     def sliderPreview_OnChange(self, event: wx.CommandEvent):
+        "Selects current frame of animation"
         self.ventana.imageDisplay.SetImage(self.bmps[self.ventana.sliderPreview.Value])
 
     def timer_Tick(self, event: wx.TimerEvent):
+        "Timer for animation preview"
         frame = self.ventana.sliderPreview.Value
         if frame < self.ventana.sliderPreview.Max:
             frame += 1
@@ -123,6 +139,7 @@ class MyApp(wx.App):
         self.ventana.imageDisplay.SetImage(self.bmps[frame])
 
     def buttonPlayPause_OnToggle(self, event: wx.CommandEvent):
+        "Starts/stops the animation"
         if self.ventana.buttonPlayPause.Value:
             self.timer.Start(round(1000 / self.ventana.spinFps.Value))
         else:
@@ -155,5 +172,11 @@ class MyApp(wx.App):
 
 
 if __name__ == "__main__":
+    import os
+    import sys
+    abspath = os.path.abspath(os.path.realpath(sys.argv[0]))
+    dname = os.path.dirname(abspath)
+    os.chdir(dname)
+
     app = MyApp(0)
     app.MainLoop()
