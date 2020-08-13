@@ -1,6 +1,6 @@
 import wx
 import wx.lib.newevent
-from pattern import GetPatternBrush
+from explo.pattern import GetPatternBrush
 
 try:
     from agw import cubecolourdialog as CCD

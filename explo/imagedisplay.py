@@ -1,5 +1,5 @@
 import wx
-from pattern import GetPatternBrush
+from explo.pattern import GetPatternBrush
 
 class ImageDisplay(wx.Window):
     def __init__(self, parent=None, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, name=wx.PanelNameStr):

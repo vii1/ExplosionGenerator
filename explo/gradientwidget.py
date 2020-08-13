@@ -1,7 +1,7 @@
 import wx
 import wx.lib.newevent
-from colorpicker import ColorPicker, ColorPickerEvent, EVT_COLOR_PICKER
-from pattern import GetPatternBrush
+from explo.colorpicker import ColorPicker, ColorPickerEvent, EVT_COLOR_PICKER
+from explo.pattern import GetPatternBrush
 
 GradientWidgetEvent, EVT_GRADIENT_WIDGET = wx.lib.newevent.NewCommandEvent()
 

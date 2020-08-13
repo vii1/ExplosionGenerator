@@ -6,13 +6,12 @@
 import wx
 
 # begin wxGlade: dependencies
-import gettext
 # end wxGlade
 from gettext import gettext as _
 
 # begin wxGlade: extracode
-from imagedisplay import ImageDisplay
-from gradientwidget import GradientWidget
+from explo.imagedisplay import ImageDisplay
+from explo.gradientwidget import GradientWidget
 # end wxGlade
 
 
